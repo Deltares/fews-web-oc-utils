@@ -1,0 +1,69 @@
+{
+  "name": "@deltares/fews-web-oc-utils",
+  "version": "0.1.1",
+  "description": "Util Library for common Web OC functionality",
+  "author": {
+    "name": "Rudie Ekkelenkamp",
+    "email": "rudie.ekkelenkamp@deltares.nl"
+  },
+  "keywords": [
+    "FEWS",
+    "PI REST Service",
+    "Web Operator Client",
+    "Web OC"
+  ],
+  "license": "MIT",
+  "main": "./dist/fews-web-oc-utils.umd.js",
+  "typings": "./dist/types/index.d.ts",
+  "private": false,
+  "scripts": {
+    "build": "npm run clean && tsc && webpack",
+    "clean": "shx rm -rf dist",
+    "doc": "typedoc --out doc src",
+    "lint": "eslint src/**.ts",
+    "lint:fix": "eslint src/**.ts --fix",
+    "test:unit": "jest unit --collect-coverage",
+    "test:e2e": "jest e2e",
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.0.0",
+    "@types/jsdom": "^16.2.14",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "cross-fetch": "^3.1.5",
+    "dotenv": "^16.0.0",
+    "eslint": "^6.8.0",
+    "fetch-mock": "^9.11.0",
+    "jest": "^28.0.1",
+    "jest-environment-jsdom": "^29.0.1",
+    "jest-junit": "^13.0.0",
+    "jest-teamcity-reporter": "^0.9.0",
+    "jsdom": "^19.0.0",
+    "shx": "^0.3.2",
+    "ts-jest": "^28.0.8",
+    "ts-loader": "^9.3.1",
+    "typedoc": "^0.23.13",
+    "typescript": "^4.8.2",
+    "webpack": "^5.59.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "jest-junit": {
+    "outputDirectory": "reports/",
+    "outputName": "junit.xml"
+  },
+  "engines": {
+    "node": ">=0.14"
+  },
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deltares/fews-web-oc-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/Deltares/fews-web-oc-utils/issues"
+  }
+}

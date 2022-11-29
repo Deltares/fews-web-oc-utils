@@ -1,0 +1,42 @@
+name: Github Pages
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: npm i
+      - run: npx typedoc src/index.ts
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pages
+          path: docs
+
+  deploy-pages:
+    needs: build-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: pages
+          path: docs
+      - uses: actions/configure-pages@v1
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'docs'
+      - uses: actions/deploy-pages@main

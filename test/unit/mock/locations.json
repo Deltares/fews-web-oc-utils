@@ -1,0 +1,33 @@
+{
+  "locations": [{
+    "locationId": "delfzijl",
+    "shortName": "Delfzijl",
+    "lat": "53.33000183105469",
+    "lon": "6.929999828338623"
+  }, {
+    "locationId": "den_helder",
+    "shortName": "Den Helder",
+    "lat": "52.970001220703125",
+    "lon": "4.75"
+  }, {
+    "locationId": "dordrecht",
+    "shortName": "Dordrecht",
+    "lat": "51.81999969482422",
+    "lon": "4.670000076293945"
+  }, {
+    "locationId": "harlingen",
+    "shortName": "Harlingen",
+    "lat": "53.18000030517578",
+    "lon": "5.409999847412109"
+  }, {
+    "locationId": "hoekvanholland",
+    "shortName": "Hoek van Holland",
+    "lat": "51.97999954223633",
+    "lon": "4.119999885559082"
+  }, {
+    "locationId": "vlissingen",
+    "shortName": "Vlissingen",
+    "lat": "51.439998626708984",
+    "lon": "3.5999999046325684"
+  }]
+}
