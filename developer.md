@@ -21,4 +21,4 @@ git push origin vX.Y.Z
 3. Create a release on Github
 
 Creating a release on Github is a manual step. For more information see: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
-Create the release from the existing tag we just created. For the title of the release use `vX.Y.Z`. Use the `Generate releasenotes` button to list all pull request that are included in this release. When the release is created the Github workflow '.github/workflows/npm-publish' will run automatically to deploy the new version to https://www.npmjs.com/package/@deltares/fews-pi-requests.
+Create the release from the existing tag we just created. For the title of the release use `vX.Y.Z`. Use the `Generate releasenotes` button to list all pull request that are included in this release. When the release is created the Github workflow '.github/workflows/npm-publish' will run automatically to deploy the new version to https://www.npmjs.com/package/@deltares/fews-web-oc-utils

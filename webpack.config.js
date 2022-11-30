@@ -5,9 +5,9 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    library: 'fews-pi-requests',
+    library: 'fews-web-oc-utils',
     libraryTarget: 'umd',
-    filename: 'fews-pi-requests.umd.js',
+    filename: 'fews-web-oc-utils.umd.js',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
