@@ -1,6 +1,6 @@
 import DataRequestResult from "./dataRequestResult";
 
-export default class PiRestService {
+export class PiRestService {
     private readonly webserviceUrl: string;
     private _oauth2Token: string | undefined = undefined;
 

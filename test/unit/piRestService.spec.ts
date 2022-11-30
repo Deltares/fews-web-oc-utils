@@ -1,6 +1,6 @@
 import 'cross-fetch/polyfill';
 import fetchMock from "fetch-mock";
-import PiRestService from "../../src/restservice/piRestService";
+import {PiRestService} from "../../src";
 
 import expectedLocations from './mock/locations.json'
 

@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import PiRestService from "../../src/restservice/piRestService";
+import {PiRestService} from "../../src";
 import DataRequestResult from "../../src/restservice/dataRequestResult";
 
 const baseUrl = process.env.TEST_URL || "";
