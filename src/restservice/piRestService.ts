@@ -1,7 +1,7 @@
-import DataRequestResult from "./dataRequestResult";
-import {ResponseParser} from "../parser/responseParser";
-import {DefaultParser} from "../parser";
-import {RequestOptions} from "./requestOptions";
+import DataRequestResult from "./dataRequestResult.js";
+import {ResponseParser} from "../parser/responseParser.js";
+import {DefaultParser} from "../parser/defaultParser.js";
+import {RequestOptions} from "./requestOptions.js";
 
 export class PiRestService {
     private readonly webserviceUrl: string;

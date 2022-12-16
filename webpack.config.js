@@ -1,8 +1,13 @@
-const path = require('path')
+/* eslint-disable */
+import * as path from 'path';
+import { fileURLToPath } from "url"
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const config =  {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './lib/esm/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: 'fews-web-oc-utils',
@@ -15,13 +20,7 @@ module.exports = {
   plugins: [
   ],
   module: {
-    rules: [
-      {
-        // Include ts, tsx, and js files.
-        test: /\.(tsx?)|(js)$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-      },
-    ],
   },
 }
+
+export default config
