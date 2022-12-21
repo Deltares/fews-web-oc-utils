@@ -29,7 +29,7 @@ export class PiRestService {
 
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
         const requestOption = new RequestOptions()
-        requestOption.relativeUrl = false
+        requestOption.relativeUrl = !url.startsWith("http")
         return this.getDataWithParser(url, requestOption, new DefaultParser());
     }
 
