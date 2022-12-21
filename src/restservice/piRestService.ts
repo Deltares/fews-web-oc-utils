@@ -1,5 +1,6 @@
 import DataRequestResult from "./dataRequestResult";
 import {ResponseParser} from "../parser/responseParser";
+import {DefaultParser} from "../parser";
 
 export class PiRestService {
     private readonly webserviceUrl: string;
@@ -21,30 +22,21 @@ export class PiRestService {
             requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
         }
         const res = await fetch(url,requestParameters);
-        dataRequestResult.data = await parser.parse(res);
-        return dataRequestResult;
+        return await this.processResponse(dataRequestResult, res, url, parser);
     }
 
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
-        const dataRequestResult = {} as DataRequestResult<T>;
-        const requestParameters = {} as RequestInit;
-        requestParameters.method = "GET";
-        if (this._oauth2Token !== undefined) {
-            requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
-        }
-
-        const res = await fetch(url,requestParameters);
-        return await this.processResponse(dataRequestResult, res, url);
+        return this.getDataWithParser(url, new DefaultParser());
     }
 
-    private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string): Promise<DataRequestResult<T>> {
+    private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
         dataRequestResult.responseCode = res.status;
         if (res.status != 200) {
             dataRequestResult.errorMessage = res.statusText;
             return dataRequestResult;
         }
         try {
-            dataRequestResult.data = await res.json();
+            dataRequestResult.data = await parser.parse(res);
         } catch (e: any) {
             e.message += `\n When loading ${url}.`
             throw e;
@@ -59,6 +51,6 @@ export class PiRestService {
             requestInit.headers = {...authorizationHeader, ...requestInit.headers};
         }
         const res = await fetch(url, requestInit);
-        return await this.processResponse(dataRequestResult, res, url);
+        return await this.processResponse(dataRequestResult, res, url, new DefaultParser());
     }
 }
