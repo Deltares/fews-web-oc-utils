@@ -1,6 +1,7 @@
 import DataRequestResult from "./dataRequestResult";
 import {ResponseParser} from "../parser/responseParser";
 import {DefaultParser} from "../parser";
+import {RequestOptions} from "./requestOptions";
 
 export class PiRestService {
     private readonly webserviceUrl: string;
@@ -14,19 +15,22 @@ export class PiRestService {
         this.webserviceUrl = webserviceUrl;
     }
 
-    public async getDataWithParser<T>(url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
+    public async getDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
+        const requestUrl = requestOption.relativeUrl ? this.webserviceUrl + url : url;
         const dataRequestResult = {} as DataRequestResult<T>;
         const requestParameters = {} as RequestInit;
         requestParameters.method = "GET";
         if (this._oauth2Token !== undefined) {
             requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
         }
-        const res = await fetch(url,requestParameters);
-        return await this.processResponse(dataRequestResult, res, url, parser);
+        const res = await fetch(requestUrl, requestParameters);
+        return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
-        return this.getDataWithParser(url, new DefaultParser());
+        const requestOption = new RequestOptions()
+        requestOption.relativeUrl = false
+        return this.getDataWithParser(url, requestOption, new DefaultParser());
     }
 
     private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
