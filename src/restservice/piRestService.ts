@@ -1,4 +1,5 @@
 import DataRequestResult from "./dataRequestResult";
+import {ResponseParser} from "../parser/responseParser";
 
 export class PiRestService {
     private readonly webserviceUrl: string;
@@ -10,6 +11,18 @@ export class PiRestService {
 
     constructor(webserviceUrl: string) {
         this.webserviceUrl = webserviceUrl;
+    }
+
+    public async getDataWithParser<T>(url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
+        const dataRequestResult = {} as DataRequestResult<T>;
+        const requestParameters = {} as RequestInit;
+        requestParameters.method = "GET";
+        if (this._oauth2Token !== undefined) {
+            requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
+        }
+        const res = await fetch(url,requestParameters);
+        dataRequestResult.data = await parser.parse(res);
+        return dataRequestResult;
     }
 
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
