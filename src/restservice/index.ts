@@ -1,3 +1,3 @@
-export * from './dataRequestResult'
-export * from './piRestService'
-export * from './requestOptions'
+export * from './dataRequestResult.js'
+export * from './piRestService.js'
+export * from './requestOptions.js'
