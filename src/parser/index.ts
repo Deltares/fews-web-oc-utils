@@ -1,2 +1,2 @@
-export * from './defaultParser'
-export * from './responseParser'
+export * from './defaultParser.js'
+export * from './responseParser.js'
