@@ -3,16 +3,29 @@ import {ResponseParser} from "../parser/responseParser.js";
 import {DefaultParser} from "../parser/defaultParser.js";
 import {RequestOptions} from "./requestOptions.js";
 
+export interface TransformRequestFunction {
+    (request: Request): Request;
+}
+
 export class PiRestService {
     private readonly webserviceUrl: string;
+    private transformRequest: TransformRequestFunction;
     private _oauth2Token: string | undefined = undefined;
 
     set oauth2Token(value: string) {
         this._oauth2Token = value;
     }
 
-    constructor(webserviceUrl: string) {
+    constructor(webserviceUrl: string, transformRequestFn?: TransformRequestFunction) {
         this.webserviceUrl = webserviceUrl;
+        if (transformRequestFn !== undefined) {
+            this.transformRequest = transformRequestFn
+        } else {
+            function transformRequestFn(request: Request): Request {
+                return request
+            }
+            this.transformRequest = transformRequestFn
+        }
     }
 
     public async getDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
@@ -23,7 +36,8 @@ export class PiRestService {
         if (this._oauth2Token !== undefined) {
             requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
         }
-        const res = await fetch(requestUrl, requestParameters);
+        const request = new Request(requestUrl, requestParameters);
+        const res = await fetch(this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -54,7 +68,8 @@ export class PiRestService {
             const authorizationHeader = {"Authorization": "Bearer " + this._oauth2Token};
             requestInit.headers = {...authorizationHeader, ...requestInit.headers};
         }
-        const res = await fetch(url, requestInit);
+        const request = new Request(url, requestInit);
+        const res = await fetch(this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, url, new DefaultParser());
     }
 }
