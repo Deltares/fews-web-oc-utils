@@ -4,7 +4,7 @@ import {DefaultParser} from "../parser/defaultParser.js";
 import {RequestOptions} from "./requestOptions.js";
 
 export interface TransformRequestFunction {
-    (request: Request): Request;
+    (request: Request): Promise<Request>;
 }
 
 export class PiRestService {
@@ -21,7 +21,7 @@ export class PiRestService {
         if (transformRequestFn !== undefined) {
             this.transformRequest = transformRequestFn
         } else {
-            function transformRequestFn(request: Request): Request {
+            async function transformRequestFn(request: Request): Promise<Request> {
                 return request
             }
             this.transformRequest = transformRequestFn
@@ -37,7 +37,7 @@ export class PiRestService {
             requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
         }
         const request = new Request(requestUrl, requestParameters);
-        const res = await fetch(this.transformRequest(request));
+        const res = await fetch(await this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -69,7 +69,7 @@ export class PiRestService {
             requestInit.headers = {...authorizationHeader, ...requestInit.headers};
         }
         const request = new Request(url, requestInit);
-        const res = await fetch(this.transformRequest(request));
+        const res = await fetch(await this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, url, new DefaultParser());
     }
 }

@@ -4,7 +4,7 @@ import {PiRestService} from "../../src";
 
 import expectedLocations from './mock/locations.json'
 
-function transformRequest(request: Request): Request {
+async function transformRequest(request: Request): Promise<Request> {
     const requestInit: RequestInit = {
         // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
         headers: { 'Content-Type': "application/json" },
