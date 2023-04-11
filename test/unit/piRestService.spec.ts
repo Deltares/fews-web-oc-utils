@@ -44,12 +44,7 @@ describe("pi rest service", function () {
         expect(res.data).toStrictEqual(expectedLocations);
         expect(res.errorMessage).toBe(undefined)
         expect(res.responseCode).toStrictEqual(200)
-        const requestInit = {} as RequestInit;
-        requestInit.headers = { 'Content-Type': "application/json" };
-        const resWithRequestInit = await provider.getDataWithRequestInit("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON", requestInit )
-        expect(resWithRequestInit.data).not.toBeNull();
         expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
-        expect(resWithRequestInit.data).toStrictEqual(expectedLocations);
         const transformProvider = new PiRestService(baseUrl, transformRequest)
         const resWithTransformedRequest = await transformProvider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON" )
         expect(resWithTransformedRequest.data).not.toBeNull();

@@ -53,11 +53,4 @@ export class PiRestService {
         }
         return dataRequestResult;
     }
-
-    public async getDataWithRequestInit<T>(url: string, requestInit: RequestInit): Promise<DataRequestResult<T>> {
-        const dataRequestResult = {} as DataRequestResult<T>;
-        const request = new Request(url, requestInit);
-        const res = await fetch(await this.transformRequest(request));
-        return await this.processResponse(dataRequestResult, res, url, new DefaultParser());
-    }
 }
