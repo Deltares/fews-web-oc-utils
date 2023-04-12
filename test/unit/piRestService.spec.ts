@@ -4,6 +4,27 @@ import {PiRestService} from "../../src";
 
 import expectedLocations from './mock/locations.json'
 
+async function transformRequest(request: Request): Promise<Request> {
+    const requestInit: RequestInit = {
+        // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
+        headers: { 'Content-Type': "application/json" },
+    }
+    const newRequest = new Request(request, requestInit)
+    return newRequest
+}
+
+async function transformRequestWithToken(request: Request): Promise<Request> {
+    const requestInit: RequestInit = {
+        // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
+        headers: { 
+            'Content-Type': "application/json",
+            'Authorization': "Bearer testtoken"
+        },
+    }
+    const newRequest = new Request(request, requestInit)
+    return newRequest
+}
+
 const baseUrl = process.env.TEST_URL || "";
 
 describe("pi rest service", function () {
@@ -17,18 +38,18 @@ describe("pi rest service", function () {
             status: 200,
             body: JSON.stringify(expectedLocations)
         });
-        const provider = new PiRestService(baseUrl)
-        provider.oauth2Token = "testtoken"
+        const provider = new PiRestService(baseUrl, transformRequestWithToken)
         const res = await provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON" )
         expect(res.data).not.toBeNull();
         expect(res.data).toStrictEqual(expectedLocations);
         expect(res.errorMessage).toBe(undefined)
         expect(res.responseCode).toStrictEqual(200)
-        const requestInit = {} as RequestInit;
-        requestInit.cache = "no-cache";
-        const resWithRequestInit = await provider.getDataWithRequestInit("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON", requestInit )
-        expect(resWithRequestInit.data).not.toBeNull();
-        expect(resWithRequestInit.data).toStrictEqual(expectedLocations);
+        expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
+        const transformProvider = new PiRestService(baseUrl, transformRequest)
+        const resWithTransformedRequest = await transformProvider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON" )
+        expect(resWithTransformedRequest.data).not.toBeNull();
+        expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
+        expect(resWithTransformedRequest.data).toStrictEqual(expectedLocations);
     })
     it("Get Locations Not Found", async function () {
         fetchMock.get("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations", {

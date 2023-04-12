@@ -3,16 +3,24 @@ import {ResponseParser} from "../parser/responseParser.js";
 import {DefaultParser} from "../parser/defaultParser.js";
 import {RequestOptions} from "./requestOptions.js";
 
+export interface TransformRequestFunction {
+    (request: Request): Promise<Request>;
+}
+
 export class PiRestService {
     private readonly webserviceUrl: string;
-    private _oauth2Token: string | undefined = undefined;
+    private transformRequest: TransformRequestFunction;
 
-    set oauth2Token(value: string) {
-        this._oauth2Token = value;
-    }
-
-    constructor(webserviceUrl: string) {
+    constructor(webserviceUrl: string, transformRequestFn?: TransformRequestFunction) {
         this.webserviceUrl = webserviceUrl;
+        if (transformRequestFn !== undefined) {
+            this.transformRequest = transformRequestFn
+        } else {
+            async function transformRequestFn(request: Request): Promise<Request> {
+                return request
+            }
+            this.transformRequest = transformRequestFn
+        }
     }
 
     public async getDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
@@ -20,10 +28,8 @@ export class PiRestService {
         const dataRequestResult = {} as DataRequestResult<T>;
         const requestParameters = {} as RequestInit;
         requestParameters.method = "GET";
-        if (this._oauth2Token !== undefined) {
-            requestParameters.headers = {"Authorization": "Bearer " + this._oauth2Token}
-        }
-        const res = await fetch(requestUrl, requestParameters);
+        const request = new Request(requestUrl, requestParameters);
+        const res = await fetch(await this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -46,15 +52,5 @@ export class PiRestService {
             throw e;
         }
         return dataRequestResult;
-    }
-
-    public async getDataWithRequestInit<T>(url: string, requestInit: RequestInit): Promise<DataRequestResult<T>> {
-        const dataRequestResult = {} as DataRequestResult<T>;
-        if (this._oauth2Token !== undefined) {
-            const authorizationHeader = {"Authorization": "Bearer " + this._oauth2Token};
-            requestInit.headers = {...authorizationHeader, ...requestInit.headers};
-        }
-        const res = await fetch(url, requestInit);
-        return await this.processResponse(dataRequestResult, res, url, new DefaultParser());
     }
 }
