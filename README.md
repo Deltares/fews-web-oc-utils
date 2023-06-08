@@ -4,23 +4,33 @@
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
 ### Compiles and minifies for production
 ```
 npm run build
 ```
-
+Build only esm bundle
+```
+npm run build:esm
+```
+Build only cjs bundle
+```
+npm run build:cjs
+```
 ### Lints and fixes files
 ```
 npm run lint
 ```
 
-### Run Unit tests
+### Run tests
+Get the coverage report
 ```
 npm run test
+```
+Run only unit tests
+```
+npm run test:unit
+```
+Run only e2e tests
+```
+npm run test:e2e
 ```
