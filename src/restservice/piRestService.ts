@@ -33,12 +33,29 @@ export class PiRestService {
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
+    public async postDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>, body: any): Promise<DataRequestResult<T>> {
+        const requestUrl = requestOption.relativeUrl ? this.webserviceUrl + url : url;
+        const dataRequestResult = {} as DataRequestResult<T>;
+        const requestParameters = {} as RequestInit;
+        requestParameters.method = "POST";
+        requestParameters.body = body;
+        const request = new Request(requestUrl, requestParameters);
+        const res = await fetch(await this.transformRequest(request));
+        return await this.processResponse(dataRequestResult, res, requestUrl, parser);
+    }    
+
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
         const requestOption = new RequestOptions()
         requestOption.relativeUrl = !url.startsWith("http")
         return this.getDataWithParser(url, requestOption, new DefaultParser());
     }
 
+    public async postData<T>(url: string, body: any): Promise<DataRequestResult<T>> {
+        const requestOption = new RequestOptions()
+        requestOption.relativeUrl = !url.startsWith("http")
+        return this.postDataWithParser(url, requestOption, new DefaultParser(), body);
+    }
+    
     private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
         dataRequestResult.responseCode = res.status;
         if (res.status != 200) {
