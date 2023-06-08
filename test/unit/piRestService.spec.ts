@@ -75,14 +75,30 @@ describe("pi rest service: GET", function () {
 
 describe("pi rest service: POST", function () {
 
-    it("Post timeseries/edit", async function () {
+    beforeAll(function () {
         fetchMock.post("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", {
-            status: 200,
-            body: JSON.stringify({ "responseCode": 200, "errorMessage": null })
+          status: 200,
+          body: JSON.stringify({ "responseCode": 200, "errorMessage": null })
         });
+      });   
+
+    it("Post timeseries/edit", async function () {
         const provider = new PiRestService(baseUrl)
         const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }))
         expect(res.data).not.toBeNull()
         expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+        // check if headers are equal to default
+        expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
+    })
+
+    it("Post timeseries/edit with given headers", async function () {
+        const provider = new PiRestService(baseUrl)
+        const headers = {
+            'Content-Type': "application/ld+json"
+        }
+        const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }), headers)
+        expect(res.data).not.toBeNull()
+        expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+        expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/ld+json")
     })
 })
