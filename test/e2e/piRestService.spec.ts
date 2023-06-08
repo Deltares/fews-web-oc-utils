@@ -6,7 +6,7 @@ import DataRequestResult from "../../src/restservice/dataRequestResult.js";
 
 const baseUrl = process.env.TEST_URL || "";
 
-describe("pi rest service", function () {
+describe("pi rest service: GET", function () {
     it("get locations", async function () {
         const provider = new PiRestService(baseUrl);
         const res = await provider.getData<DataRequestResult<unknown>>(baseUrl + "/rest/fewspiservice/v1/locations?documentFormat=PI_JSON");
@@ -26,6 +26,18 @@ describe("pi rest service", function () {
         const res = await provider.getDataWithParser<DataRequestResult<unknown>>(  "/rest/fewspiservice/v1/locations?documentFormat=PI_JSON", requestOptions, new DefaultParser());
         expect(res.data).not.toBeNull()
     })
+})
 
-
+describe("pi rest service: POST", function () {
+    it("post timeseries/edit", async function () {
+        const provider = new PiRestService(baseUrl)
+        const res = await provider.postData<DataRequestResult<unknown>>(baseUrl + "/rest/fewspiservice/v1/timeseries/edit?timeSeriesSetIndex=0&locationId=test", JSON.stringify({
+            "test": "teste2e",
+        }));
+        const c = res.data
+        expect(res.data).not.toBeNull()
+        // add expect to check if data is not undefined
+        // expect(res.data).not.toBeUndefined()
+    }
+    )
 })
