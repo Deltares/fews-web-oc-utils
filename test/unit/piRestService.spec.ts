@@ -27,7 +27,7 @@ async function transformRequestWithToken(request: Request): Promise<Request> {
 
 const baseUrl = process.env.TEST_URL || "";
 
-describe("pi rest service", function () {
+describe("pi rest service: GET", function () {
 
     afterAll(function () {
         fetchMock.restore();
@@ -71,4 +71,18 @@ describe("pi rest service", function () {
             expect(error.message).toContain(" When loading https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
         }
     });
+})
+
+describe("pi rest service: POST", function () {
+
+    it("Post timeseries/edit", async function () {
+        fetchMock.post("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", {
+            status: 200,
+            body: JSON.stringify({ "responseCode": 200, "errorMessage": null })
+        });
+        const provider = new PiRestService(baseUrl)
+        const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }))
+        expect(res.data).not.toBeNull()
+        expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+    })
 })
