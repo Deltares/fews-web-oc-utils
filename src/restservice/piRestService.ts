@@ -54,7 +54,7 @@ export class PiRestService {
     public async postData<T>(url: string, body: any, headers: HeadersInit = { "Content-Type": "application/json" }): Promise<DataRequestResult<T>> {
         const requestOption = new RequestOptions()
         requestOption.relativeUrl = !url.startsWith("http")
-        return this.postDataWithParser(url, requestOption, new DefaultParser(), body, headers=headers);
+        return this.postDataWithParser(url, requestOption, new DefaultParser(), body, headers);
     }
     
     private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
