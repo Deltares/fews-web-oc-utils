@@ -1,7 +1,7 @@
 import DataRequestResult from "./dataRequestResult.js";
+import {RequestOptions} from "./requestOptions.js";
 import {ResponseParser} from "../parser/responseParser.js";
 import {DefaultParser} from "../parser/defaultParser.js";
-import {RequestOptions} from "./requestOptions.js";
 
 export interface TransformRequestFunction {
     (request: Request): Promise<Request>;
@@ -43,7 +43,7 @@ export class PiRestService {
         const request = new Request(requestUrl, requestParameters);
         const res = await fetch(await this.transformRequest(request));
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
-    }    
+    }
 
     public async getData<T>(url: string): Promise<DataRequestResult<T>> {
         const requestOption = new RequestOptions()
@@ -56,9 +56,10 @@ export class PiRestService {
         requestOption.relativeUrl = !url.startsWith("http")
         return this.postDataWithParser(url, requestOption, new DefaultParser(), body, headers);
     }
-    
+
     private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
         dataRequestResult.responseCode = res.status;
+        dataRequestResult.contentType = res.headers.get('content-type')
         if (res.status != 200) {
             dataRequestResult.errorMessage = res.statusText;
             return dataRequestResult;
