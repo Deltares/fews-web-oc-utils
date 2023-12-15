@@ -29,4 +29,35 @@ describe("mergeHeaders", () => {
         expect(mergedHeaders).not.toBe(headers1);
         expect(mergedHeaders).not.toBe(headers2);
     });
+
+    it("should return first header if second is empty", () => {
+        const headers1 = new Headers({
+            "Content-Type": "application/json",
+            "Authorization": "Bearer token"
+        });
+
+        const headers2 = new Headers({});
+
+        const mergedHeaders = mergeHeaders(headers1, headers2);
+
+        expect(mergedHeaders.entries.length).toBe(2);
+        expect(mergedHeaders.get("Content-Type")).toBe("application/json");
+        expect(mergedHeaders.get("Authorization")).toBe("Bearer token");
+    })
+
+    it("should return second header if first is empty", () => {
+        const headers1 = new Headers({});
+
+        const headers2 = new Headers({
+            "Content-Type": "application/json",
+            "Authorization": "Bearer token"
+        });
+
+
+        const mergedHeaders = mergeHeaders(headers1, headers2);
+
+        expect(mergedHeaders.entries.length).toBe(2);
+        expect(mergedHeaders.get("Content-Type")).toBe("application/json");
+        expect(mergedHeaders.get("Authorization")).toBe("Bearer token");
+    })
 });
