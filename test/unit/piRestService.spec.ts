@@ -4,25 +4,30 @@ import fetchMock from "fetch-mock";
 import {PiRestService} from "../../src/restservice/piRestService.js";
 import {PlainTextParser} from "../../src/parser/plainTextParser.js";
 import {RequestOptions} from "../../src/restservice/requestOptions.js";
+import {mergeHeaders} from "../../src/request/mergeHeaders.js"
 
 import expectedLocations from './mock/locations.json'
 
 async function transformRequest(request: Request): Promise<Request> {
+    // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
+    const newHeaders = new Headers({
+        'Content-Type': "application/json"
+    })
     const requestInit: RequestInit = {
-        // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
-        headers: { 'Content-Type': "application/json" },
+        headers: mergeHeaders(request.headers, newHeaders),
     }
     const newRequest = new Request(request, requestInit)
     return newRequest
 }
 
 async function transformRequestWithToken(request: Request): Promise<Request> {
+    // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
+    const newHeaders = new Headers({
+        'Content-Type': "application/json",
+        'Authorization': "Bearer testtoken"
+    })
     const requestInit: RequestInit = {
-        // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
-        headers: {
-            'Content-Type': "application/json",
-            'Authorization': "Bearer testtoken"
-        },
+        headers: mergeHeaders(request.headers, newHeaders),
     }
     const newRequest = new Request(request, requestInit)
     return newRequest
@@ -85,11 +90,22 @@ describe("pi rest service json body: POST", function () {
         });
       });
 
+    afterAll(function () {
+        fetchMock.restore();
+    });
+
     it("Post timeseries/edit", async function () {
         const provider = new PiRestService(baseUrl)
         const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }))
         expect(res.data).not.toBeNull()
         expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+        // check if headers are equal to default
+        expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
+
+        const transformProvider = new PiRestService(baseUrl, transformRequestWithToken)
+        const resWithTransformedRequest = await transformProvider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }))
+        expect(resWithTransformedRequest.data).not.toBeNull()
+        expect(resWithTransformedRequest.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
         // check if headers are equal to default
         expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
     })
