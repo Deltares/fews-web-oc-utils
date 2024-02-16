@@ -67,8 +67,7 @@ export class PiRestService {
         try {
             dataRequestResult.data = await parser.parse(res);
         } catch (e: any) {
-            e.message += `\n When loading ${url}.`
-            throw e;
+            throw new Error(`Error when loading ${url}.`, { cause: e });
         }
         return dataRequestResult;
     }
