@@ -71,7 +71,7 @@ describe("pi rest service: GET", function () {
         try {
             await provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
         } catch (error: any) {
-            expect(error.message).toContain(" When loading https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
+            expect(error.message).toContain(" when loading https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
         }
     });
 })
