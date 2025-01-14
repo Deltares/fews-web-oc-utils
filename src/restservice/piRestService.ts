@@ -30,7 +30,7 @@ export class PiRestService {
         requestParameters.method = "GET";
         const request = new Request(requestUrl, requestParameters);
         const res = await fetch(await this.transformRequest(request));
-        if (!res.ok) throw new Error(res.statusText)
+        if (!res.ok) throw new Error('Fetch Error', { cause: res })
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -43,7 +43,7 @@ export class PiRestService {
         requestParameters.headers = headers;
         const request = new Request(requestUrl, requestParameters);
         const res = await fetch(await this.transformRequest(request));
-        if (!res.ok) throw new Error(res.statusText)
+        if (!res.ok) throw new Error('Fetch Error', { cause: res })
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -62,15 +62,10 @@ export class PiRestService {
     private async processResponse<T>(dataRequestResult: DataRequestResult<T>, res: Response, url: string, parser: ResponseParser<T>): Promise<DataRequestResult<T>> {
         dataRequestResult.responseCode = res.status;
         dataRequestResult.contentType = res.headers.get('content-type')
-        if (res.status != 200) {
-            dataRequestResult.errorMessage = res.statusText;
-            return dataRequestResult;
-        }
         try {
             dataRequestResult.data = await parser.parse(res);
         } catch (e: any) {
-            e.message += `\n When loading ${url}.`
-            throw e;
+            throw new Error(`Parse Error for response ${url}.`, { cause: e });
         }
         return dataRequestResult;
     }

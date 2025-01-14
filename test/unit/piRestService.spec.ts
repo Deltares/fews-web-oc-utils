@@ -59,20 +59,16 @@ describe("pi rest service: GET", function () {
             status: 400, body: JSON.stringify("not found")
         });
         const provider = new PiRestService(baseUrl)
-        const res = await provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations")
-        expect(res.errorMessage).toBe("Bad Request")
-        expect(res.responseCode).toStrictEqual(400)
+        const res = provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations")
+        await expect(res).rejects.toThrow("Fetch Error");
     })
     it("Get Locations Invalid JSON response", async function () {
         fetchMock.get("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid", {
             status: 200, body: "{"
         });
         const provider = new PiRestService(baseUrl)
-        try {
-            await provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
-        } catch (error: any) {
-            expect(error.message).toContain(" When loading https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
-        }
+        const res = provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid")
+        await expect(res).rejects.toThrow("Parse Error for response https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid");
     });
 })
 
