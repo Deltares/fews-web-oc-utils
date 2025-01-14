@@ -30,6 +30,7 @@ export class PiRestService {
         requestParameters.method = "GET";
         const request = new Request(requestUrl, requestParameters);
         const res = await fetch(await this.transformRequest(request));
+        if (!res.ok) throw new Error(res.statusText)
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
@@ -42,6 +43,7 @@ export class PiRestService {
         requestParameters.headers = headers;
         const request = new Request(requestUrl, requestParameters);
         const res = await fetch(await this.transformRequest(request));
+        if (!res.ok) throw new Error(res.statusText)
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
