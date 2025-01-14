@@ -45,7 +45,6 @@ describe("pi rest service: GET", function () {
         const res = await provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON" )
         expect(res.data).not.toBeNull();
         expect(res.data).toStrictEqual(expectedLocations);
-        expect(res.errorMessage).toBe(undefined)
         expect(res.responseCode).toStrictEqual(200)
         expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
         const transformProvider = new PiRestService(baseUrl, transformRequest)
@@ -77,7 +76,7 @@ describe("pi rest service json body: POST", function () {
     beforeAll(function () {
         fetchMock.post("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", {
           status: 200,
-          body: JSON.stringify({ "responseCode": 200, "errorMessage": null })
+          body: JSON.stringify({ "responseCode": 200 })
         });
       });
 
@@ -85,7 +84,7 @@ describe("pi rest service json body: POST", function () {
         const provider = new PiRestService(baseUrl)
         const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }))
         expect(res.data).not.toBeNull()
-        expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+        expect(res.data).toStrictEqual({ "responseCode": 200 })
         // check if headers are equal to default
         expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/json")
     })
@@ -97,7 +96,7 @@ describe("pi rest service json body: POST", function () {
         }
         const res = await provider.postData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit", JSON.stringify({ "test": "test" }), headers)
         expect(res.data).not.toBeNull()
-        expect(res.data).toStrictEqual({ "responseCode": 200, "errorMessage": null })
+        expect(res.data).toStrictEqual({ "responseCode": 200 })
         expect(fetchMock.lastCall()?.request?.headers.get('Content-Type')).toBe("application/ld+json")
     })
 })
