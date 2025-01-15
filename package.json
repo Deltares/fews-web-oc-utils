@@ -1,6 +1,6 @@
 {
   "name": "@deltares/fews-web-oc-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Util Library for common Web OC functionality",
   "author": {
     "name": "Werner Kramer",
