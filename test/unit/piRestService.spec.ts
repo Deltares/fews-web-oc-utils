@@ -54,12 +54,15 @@ describe("pi rest service: GET", function () {
         expect(resWithTransformedRequest.data).toStrictEqual(expectedLocations);
     })
     it("Get Locations Not Found", async function () {
-        fetchMock.get("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations", {
+        const mockReponse =  {
             status: 400, body: JSON.stringify("not found")
-        });
+        }
+        fetchMock.get("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations", mockReponse);
         const provider = new PiRestService(baseUrl)
         const res = provider.getData("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations")
-        await expect(res).rejects.toThrow("Fetch Error");
+        
+        const expectedError = new Error("Fetch Error", {cause: mockReponse})
+        await expect(res).rejects.toThrow(expectedError);
     })
     it("Get Locations Invalid JSON response", async function () {
         fetchMock.get("https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid", {
