@@ -34,7 +34,7 @@ export class PiRestService {
         return await this.processResponse(dataRequestResult, res, requestUrl, parser);
     }
 
-    public async postDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>, body: any, headers: HeadersInit): Promise<DataRequestResult<T>> {
+    public async postDataWithParser<T>(url: string, requestOption: RequestOptions, parser: ResponseParser<T>, body: BodyInit, headers: HeadersInit): Promise<DataRequestResult<T>> {
         const requestUrl = requestOption.relativeUrl ? this.webserviceUrl + url : url;
         const dataRequestResult = {} as DataRequestResult<T>;
         const requestParameters = {} as RequestInit;
@@ -53,7 +53,7 @@ export class PiRestService {
         return this.getDataWithParser(url, requestOption, new DefaultParser());
     }
 
-    public async postData<T>(url: string, body: any, headers: HeadersInit = { "Content-Type": "application/json" }): Promise<DataRequestResult<T>> {
+    public async postData<T>(url: string, body: BodyInit, headers: HeadersInit = { "Content-Type": "application/json" }): Promise<DataRequestResult<T>> {
         const requestOption = new RequestOptions()
         requestOption.relativeUrl = !url.startsWith("http")
         return this.postDataWithParser(url, requestOption, new DefaultParser(), body, headers);
@@ -64,7 +64,7 @@ export class PiRestService {
         dataRequestResult.contentType = res.headers.get('content-type')
         try {
             dataRequestResult.data = await parser.parse(res);
-        } catch (e: any) {
+        } catch (e: unknown) {
             throw new Error(`Parse Error for response ${url}.`, { cause: e });
         }
         return dataRequestResult;
