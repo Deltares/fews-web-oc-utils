@@ -11,7 +11,7 @@ import expectedLocations from './mock/locations.json'
 async function transformRequest(request: Request): Promise<Request> {
   const requestInit: RequestInit = {
     // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
   }
   const newRequest = new Request(request, requestInit)
   return newRequest
@@ -22,8 +22,8 @@ async function transformRequestWithToken(request: Request): Promise<Request> {
     // Only some of the properties of RequestInit are used by fetch-mock, such as 'headers'.
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer testtoken'
-    }
+      Authorization: 'Bearer testtoken',
+    },
   }
   const newRequest = new Request(request, requestInit)
   return newRequest
@@ -43,55 +43,57 @@ describe('pi rest service: GET', function () {
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
       {
         status: 200,
-        body: JSON.stringify(expectedLocations)
-      }
+        body: JSON.stringify(expectedLocations),
+      },
     )
     const provider = new PiRestService(baseUrl, transformRequestWithToken)
     const res = await provider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON'
+      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
     )
     expect(res.data).not.toBeNull()
     expect(res.data).toStrictEqual(expectedLocations)
     expect(res.responseCode).toStrictEqual(200)
     expect(
-      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')
+      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type'),
     ).toBe('application/json')
     const transformProvider = new PiRestService(baseUrl, transformRequest)
     const resWithTransformedRequest = await transformProvider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON'
+      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
     )
     expect(resWithTransformedRequest.data).not.toBeNull()
     expect(
-      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')
+      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type'),
     ).toBe('application/json')
     expect(resWithTransformedRequest.data).toStrictEqual(expectedLocations)
   })
   it('Get Locations Not Found', async function () {
     const mockReponse = {
       status: 400,
-      body: JSON.stringify('not found')
+      body: JSON.stringify('not found'),
     }
     fetchMock.route(
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations',
-      mockReponse
+      mockReponse,
     )
     const provider = new PiRestService(baseUrl)
     try {
       const res = provider.getData(
-        'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations'
+        'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations',
       )
-      await expect(res).rejects.toThrow('Fetch Error');
-    } catch (error: any) {
+      await expect(res).rejects.toThrow('Fetch Error')
+    } catch (error) {
       expect(error).toBeInstanceOf(Error)
-      expect(error.message).toBe('Fetch Error')
+      if (error instanceof Error) {
+        expect(error.message).toBe('Fetch Error')
 
-      // The cause will be a Response
-      const response = error.cause as Response
-      expect(response).toBeInstanceOf(Response)
-      expect(response.status).toBe(400)
+        // The cause will be a Response
+        const response = error.cause as Response
 
-      const text = await response.text()
-      expect(text).toBe('"not found"')
+        expect(response).toBeInstanceOf(Response)
+        expect(response.status).toBe(400)
+        const text = await response.text()
+        expect(text).toBe('"not found"')
+      }
     }
   })
   it('Get Locations Invalid JSON response', async function () {
@@ -99,15 +101,15 @@ describe('pi rest service: GET', function () {
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
       {
         status: 200,
-        body: '{'
-      }
+        body: '{',
+      },
     )
     const provider = new PiRestService(baseUrl)
     const res = provider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid'
+      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
     )
     await expect(res).rejects.toThrow(
-      'Parse Error for response https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid'
+      'Parse Error for response https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
     )
   })
 })
@@ -120,8 +122,8 @@ describe('pi rest service json body: POST', function () {
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit',
       {
         status: 200,
-        body: JSON.stringify({ responseCode: 200 })
-      }
+        body: JSON.stringify({ responseCode: 200 }),
+      },
     )
   })
 
@@ -133,30 +135,30 @@ describe('pi rest service json body: POST', function () {
     const provider = new PiRestService(baseUrl)
     const res = await provider.postData(
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit',
-      JSON.stringify({ test: 'test' })
+      JSON.stringify({ test: 'test' }),
     )
     expect(res.data).not.toBeNull()
     expect(res.data).toStrictEqual({ responseCode: 200 })
     // check if headers are equal to default
     expect(
-      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')
+      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type'),
     ).toBe('application/json')
   })
 
   it('Post timeseries/edit with given headers', async function () {
     const provider = new PiRestService(baseUrl)
     const headers = {
-      'Content-Type': 'application/ld+json'
+      'Content-Type': 'application/ld+json',
     }
     const res = await provider.postData(
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit',
       JSON.stringify({ test: 'test' }),
-      headers
+      headers,
     )
     expect(res.data).not.toBeNull()
     expect(res.data).toStrictEqual({ responseCode: 200 })
     expect(
-      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')
+      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type'),
     ).toBe('application/ld+json')
   })
 })
@@ -175,12 +177,12 @@ describe('pi rest service json urlencoded: POST', function () {
       'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries',
       {
         status: 200,
-        body: '{}'
-      }
+        body: '{}',
+      },
     )
     const provider = new PiRestService(baseUrl)
     const headers = {
-      'Content-Type': 'application/xml'
+      'Content-Type': 'application/xml',
     }
     const requestOption = new RequestOptions()
     requestOption.relativeUrl = false
@@ -189,13 +191,13 @@ describe('pi rest service json urlencoded: POST', function () {
       requestOption,
       new PlainTextParser(),
       JSON.stringify({ test: 'test' }),
-      headers
+      headers,
     )
     expect(res.data).not.toBeNull()
     expect(res.data).toStrictEqual('{}')
     expect(res.responseCode).toBe(200)
     expect(
-      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')
+      fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type'),
     ).toBe('application/xml')
   })
 })
