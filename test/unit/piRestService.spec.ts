@@ -29,7 +29,7 @@ async function transformRequestWithToken(request: Request): Promise<Request> {
   return newRequest
 }
 
-const baseUrl = process.env.TEST_URL || ''
+const baseUrl = 'https://mock.dev/fewswebservices/'
 
 describe('pi rest service: GET', function () {
   beforeAll(() => fetchMock.mockGlobal())
@@ -48,7 +48,7 @@ describe('pi rest service: GET', function () {
     )
     const provider = new PiRestService(baseUrl, transformRequestWithToken)
     const res = await provider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
+      'rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
     )
     expect(res.data).not.toBeNull()
     expect(res.data).toStrictEqual(expectedLocations)
@@ -58,7 +58,7 @@ describe('pi rest service: GET', function () {
     ).toBe('application/json')
     const transformProvider = new PiRestService(baseUrl, transformRequest)
     const resWithTransformedRequest = await transformProvider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
+      'rest/fewspiservice/v1/locations?documentFormat=PI_JSON',
     )
     expect(resWithTransformedRequest.data).not.toBeNull()
     expect(
@@ -78,7 +78,7 @@ describe('pi rest service: GET', function () {
     const provider = new PiRestService(baseUrl)
     try {
       const res = provider.getData(
-        'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations',
+        'rest/fewspiservice/v1/locations',
       )
       await expect(res).rejects.toThrow('Fetch Error')
     } catch (error) {
@@ -106,7 +106,7 @@ describe('pi rest service: GET', function () {
     )
     const provider = new PiRestService(baseUrl)
     const res = provider.getData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
+      'rest/fewspiservice/v1/locations?invalid',
     )
     await expect(res).rejects.toThrow(
       'Parse Error for response https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
@@ -134,7 +134,7 @@ describe('pi rest service json body: POST', function () {
   it('Post timeseries/edit', async function () {
     const provider = new PiRestService(baseUrl)
     const res = await provider.postData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit',
+      'rest/fewspiservice/v1/timeseries/edit',
       JSON.stringify({ test: 'test' }),
     )
     expect(res.data).not.toBeNull()
@@ -151,7 +151,7 @@ describe('pi rest service json body: POST', function () {
       'Content-Type': 'application/ld+json',
     }
     const res = await provider.postData(
-      'https://mock.dev/fewswebservices/rest/fewspiservice/v1/timeseries/edit',
+      'rest/fewspiservice/v1/timeseries/edit',
       JSON.stringify({ test: 'test' }),
       headers,
     )
