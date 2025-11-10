@@ -55,7 +55,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Deltares/fews-web-oc-utils"
+    "url": "git+https://github.com/Deltares/fews-web-oc-utils.git"
   },
   "bugs": {
     "url": "https://github.com/Deltares/fews-web-oc-utils/issues"
