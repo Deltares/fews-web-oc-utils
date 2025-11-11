@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
-      - name: Update npm
+      - name: Update npm # 11.5.0 required for OIDC authentication
         run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build
