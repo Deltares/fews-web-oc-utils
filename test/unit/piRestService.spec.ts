@@ -1,4 +1,3 @@
-import 'cross-fetch/polyfill'
 import fetchMock from 'fetch-mock'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
