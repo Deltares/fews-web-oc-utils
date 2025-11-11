@@ -59,5 +59,9 @@
   },
   "bugs": {
     "url": "https://github.com/Deltares/fews-web-oc-utils/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   }
 }
