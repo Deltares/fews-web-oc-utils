@@ -23,7 +23,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "doc": "typedoc --out doc src",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "^24.12.2",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
