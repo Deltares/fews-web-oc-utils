@@ -16,12 +16,12 @@ export class PiRestService {
     transformRequestFn?: TransformRequestFunction,
   ) {
     this.webserviceUrl = webserviceUrl
-    if (transformRequestFn !== undefined) {
-      this.transformRequest = transformRequestFn
-    } else {
+    if (transformRequestFn === undefined) {
       async function transformRequestFn(request: Request): Promise<Request> {
         return request
       }
+      this.transformRequest = transformRequestFn
+    } else {
       this.transformRequest = transformRequestFn
     }
   }
