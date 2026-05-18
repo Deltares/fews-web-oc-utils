@@ -1,5 +1,8 @@
 name: Github Pages
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [created]
@@ -11,6 +14,9 @@ concurrency:
 
 jobs:
   build-pages:
+    permissions:
+      contents: read
+      actions: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -31,6 +37,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       contents: read
+      actions: read
       pages: write
       id-token: write
     runs-on: ubuntu-latest

@@ -3,6 +3,9 @@
 
 name: Node.js Package
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [created]
@@ -10,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
