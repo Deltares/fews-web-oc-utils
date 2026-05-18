@@ -3,9 +3,7 @@ import { RequestOptions } from './requestOptions.js'
 import { ResponseParser } from '../parser/responseParser.js'
 import { DefaultParser } from '../parser/defaultParser.js'
 
-export interface TransformRequestFunction {
-  (request: Request): Promise<Request>
-}
+export type TransformRequestFunction = (request: Request) => Promise<Request>
 
 export class PiRestService {
   private readonly webserviceUrl: string
