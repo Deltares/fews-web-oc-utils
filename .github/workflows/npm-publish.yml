@@ -3,10 +3,6 @@
 
 name: Node.js Package
 
-permissions:
-  id-token: write # Required for OIDC
-  contents: read
-
 on:
   release:
     types: [created]
@@ -25,6 +21,10 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
