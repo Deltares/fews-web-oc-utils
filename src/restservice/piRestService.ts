@@ -3,9 +3,7 @@ import { RequestOptions } from './requestOptions.js'
 import { ResponseParser } from '../parser/responseParser.js'
 import { DefaultParser } from '../parser/defaultParser.js'
 
-export interface TransformRequestFunction {
-  (request: Request): Promise<Request>
-}
+export type TransformRequestFunction = (request: Request) => Promise<Request>
 
 export class PiRestService {
   private readonly webserviceUrl: string
@@ -16,12 +14,12 @@ export class PiRestService {
     transformRequestFn?: TransformRequestFunction,
   ) {
     this.webserviceUrl = webserviceUrl
-    if (transformRequestFn !== undefined) {
-      this.transformRequest = transformRequestFn
-    } else {
+    if (transformRequestFn === undefined) {
       async function transformRequestFn(request: Request): Promise<Request> {
         return request
       }
+      this.transformRequest = transformRequestFn
+    } else {
       this.transformRequest = transformRequestFn
     }
   }
@@ -83,7 +81,7 @@ export class PiRestService {
   public async postData<T>(
     url: string,
     body: BodyInit,
-    headers: HeadersInit = { 'Content-Type': 'application/json' },
+    headers?: HeadersInit,
   ): Promise<DataRequestResult<T>> {
     const requestOption = new RequestOptions()
     requestOption.relativeUrl = !url.startsWith('http')
@@ -92,7 +90,7 @@ export class PiRestService {
       requestOption,
       new DefaultParser(),
       body,
-      headers,
+      { 'Content-Type': 'application/json', ...headers },
     )
   }
 
