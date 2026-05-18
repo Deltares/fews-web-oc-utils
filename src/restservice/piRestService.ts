@@ -1,4 +1,4 @@
-import DataRequestResult from './dataRequestResult.js'
+import type { DataRequestResult } from './dataRequestResult.js'
 import { RequestOptions } from './requestOptions.js'
 import { ResponseParser } from '../parser/responseParser.js'
 import { DefaultParser } from '../parser/defaultParser.js'
