@@ -9,7 +9,7 @@ export interface TransformRequestFunction {
 
 export class PiRestService {
   private readonly webserviceUrl: string
-  private transformRequest: TransformRequestFunction
+  private readonly transformRequest: TransformRequestFunction
 
   constructor(
     webserviceUrl: string,
