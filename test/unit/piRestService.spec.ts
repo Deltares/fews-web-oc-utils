@@ -76,9 +76,7 @@ describe('pi rest service: GET', function () {
     )
     const provider = new PiRestService(baseUrl)
     try {
-      const res = provider.getData(
-        'rest/fewspiservice/v1/locations',
-      )
+      const res = provider.getData('rest/fewspiservice/v1/locations')
       await expect(res).rejects.toThrow('Fetch Error')
     } catch (error) {
       expect(error).toBeInstanceOf(Error)
@@ -104,9 +102,7 @@ describe('pi rest service: GET', function () {
       },
     )
     const provider = new PiRestService(baseUrl)
-    const res = provider.getData(
-      'rest/fewspiservice/v1/locations?invalid',
-    )
+    const res = provider.getData('rest/fewspiservice/v1/locations?invalid')
     await expect(res).rejects.toThrow(
       'Parse Error for response https://mock.dev/fewswebservices/rest/fewspiservice/v1/locations?invalid',
     )

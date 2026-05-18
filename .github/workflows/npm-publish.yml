@@ -4,7 +4,7 @@
 name: Node.js Package
 
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write # Required for OIDC
   contents: read
 
 on:
