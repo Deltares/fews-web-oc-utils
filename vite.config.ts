@@ -12,7 +12,7 @@ export default defineConfig({
       entry: resolveRelativePath('src/index.ts'),
       formats: ['es'],
       name: 'fews-web-oc-utils',
-      fileName: 'fews-web-oc-utils'
-    }
-  }
+      fileName: 'fews-web-oc-utils',
+    },
+  },
 })

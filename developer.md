@@ -9,6 +9,7 @@ git checkout main
 git pull
 npm version X.Y.Z
 ```
+
 The last command updates the version in `package.json` and `package-lock.json` and creates a git tag `vX.Y.Z`
 
 2. Push the changes to Github
