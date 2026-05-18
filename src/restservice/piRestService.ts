@@ -81,7 +81,7 @@ export class PiRestService {
   public async postData<T>(
     url: string,
     body: BodyInit,
-    headers: HeadersInit = { 'Content-Type': 'application/json' },
+    headers?: HeadersInit,
   ): Promise<DataRequestResult<T>> {
     const requestOption = new RequestOptions()
     requestOption.relativeUrl = !url.startsWith('http')
@@ -90,7 +90,7 @@ export class PiRestService {
       requestOption,
       new DefaultParser(),
       body,
-      headers,
+      { 'Content-Type': 'application/json', ...headers },
     )
   }
 
