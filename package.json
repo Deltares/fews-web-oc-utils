@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
-    "doc": "typedoc --out doc src",
+    "doc": "typedoc src/index.ts",
     "lint": "npm run prettier",
     "prettier": "prettier . --check",
     "format": "prettier .  --write",
