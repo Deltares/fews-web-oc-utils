@@ -23,8 +23,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: npm i
-      - run: npx typedoc src/index.ts
+      - run: npm ci --ignore-scripts
+      - run: npm run doc
       - uses: actions/upload-artifact@v5
         with:
           name: pages
