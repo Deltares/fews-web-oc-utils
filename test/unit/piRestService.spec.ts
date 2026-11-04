@@ -143,6 +143,38 @@ describe('pi rest service json body: POST', function () {
       'application/ld+json',
     )
   })
+
+  it.each<[string, HeadersInit]>([
+    ['Headers instance', new Headers({ 'X-Custom': 'value' })],
+    ['array', [['X-Custom', 'value']]],
+    ['record', { 'X-Custom': 'value' }],
+  ])('Post timeseries/edit keeps headers given as %s', async function (_name, headers) {
+    const provider = new PiRestService(baseUrl)
+    await provider.postData(
+      'rest/fewspiservice/v1/timeseries/edit',
+      JSON.stringify({ test: 'test' }),
+      headers,
+    )
+    const requestHeaders = fetchMock.callHistory.lastCall()?.request?.headers
+    expect(requestHeaders?.get('X-Custom')).toBe('value')
+    expect(requestHeaders?.get('Content-Type')).toBe('application/json')
+  })
+
+  it.each<[string, HeadersInit]>([
+    ['Headers instance', new Headers({ 'Content-Type': 'application/ld+json' })],
+    ['array', [['Content-Type', 'application/ld+json']]],
+    ['record with lower case name', { 'content-type': 'application/ld+json' }],
+  ])('Post timeseries/edit uses content type given as %s', async function (_name, headers) {
+    const provider = new PiRestService(baseUrl)
+    await provider.postData(
+      'rest/fewspiservice/v1/timeseries/edit',
+      JSON.stringify({ test: 'test' }),
+      headers,
+    )
+    expect(fetchMock.callHistory.lastCall()?.request?.headers.get('Content-Type')).toBe(
+      'application/ld+json',
+    )
+  })
 })
 
 describe('pi rest service json urlencoded: POST', function () {
