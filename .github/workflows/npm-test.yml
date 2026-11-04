@@ -1,4 +1,4 @@
-name: Run npm test & npm lint on Pull Requests
+name: Run checks & tests on Pull Requests
 
 permissions:
   contents: read
@@ -16,8 +16,8 @@ jobs:
           node-version: 24
       - run: npm ci --ignore-scripts
 
+      - name: Check formatting, lint and types
+        run: npx vp check
+
       - name: Run unit tests
         run: npm run test:unit
-
-      - name: Run linter
-        run: npm run lint

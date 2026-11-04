@@ -22,3 +22,4 @@ npm-debug.log*
 *.sln
 *.sw?
 /test/unit/coverage/
+.vitest/
