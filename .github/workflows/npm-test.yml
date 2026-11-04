@@ -17,7 +17,7 @@ jobs:
       - run: npm ci --ignore-scripts
 
       - name: Check formatting, lint and types
-        run: npx vp check
+        run: npm run check
 
       - name: Run unit tests
         run: npm run test:unit

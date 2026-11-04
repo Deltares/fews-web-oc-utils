@@ -27,7 +27,7 @@ npm run build:cjs
 ### Check formatting, lint and types
 
 ```
-npx vp check
+npm run check
 ```
 
 ### Lint

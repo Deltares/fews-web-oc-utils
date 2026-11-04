@@ -25,6 +25,7 @@
   "scripts": {
     "build": "vp build && tsc -p tsconfig.build.json",
     "doc": "typedoc src/index.ts",
+    "check": "vp check",
     "lint": "vp lint",
     "format": "vp fmt .",
     "test:unit": "vp test run test/unit",
