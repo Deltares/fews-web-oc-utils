@@ -9,19 +9,9 @@ export class PiRestService {
   private readonly webserviceUrl: string
   private readonly transformRequest: TransformRequestFunction
 
-  constructor(
-    webserviceUrl: string,
-    transformRequestFn?: TransformRequestFunction,
-  ) {
+  constructor(webserviceUrl: string, transformRequestFn?: TransformRequestFunction) {
     this.webserviceUrl = webserviceUrl
-    if (transformRequestFn === undefined) {
-      async function transformRequestFn(request: Request): Promise<Request> {
-        return request
-      }
-      this.transformRequest = transformRequestFn
-    } else {
-      this.transformRequest = transformRequestFn
-    }
+    this.transformRequest = transformRequestFn ?? ((request) => Promise.resolve(request))
   }
 
   public async getDataWithParser<T>(
@@ -29,21 +19,14 @@ export class PiRestService {
     requestOption: RequestOptions,
     parser: ResponseParser<T>,
   ): Promise<DataRequestResult<T>> {
-    const requestUrl = requestOption.relativeUrl
-      ? this.webserviceUrl + url
-      : url
+    const requestUrl = requestOption.relativeUrl ? this.webserviceUrl + url : url
     const dataRequestResult = {} as DataRequestResult<T>
     const requestParameters = {} as RequestInit
     requestParameters.method = 'GET'
     const request = new Request(requestUrl, requestParameters)
     const res = await fetch(await this.transformRequest(request))
     if (!res.ok) throw new Error('Fetch Error', { cause: res })
-    return await this.processResponse(
-      dataRequestResult,
-      res,
-      requestUrl,
-      parser,
-    )
+    return await this.processResponse(dataRequestResult, res, requestUrl, parser)
   }
 
   public async postDataWithParser<T>(
@@ -53,9 +36,7 @@ export class PiRestService {
     body: BodyInit,
     headers: HeadersInit,
   ): Promise<DataRequestResult<T>> {
-    const requestUrl = requestOption.relativeUrl
-      ? this.webserviceUrl + url
-      : url
+    const requestUrl = requestOption.relativeUrl ? this.webserviceUrl + url : url
     const dataRequestResult = {} as DataRequestResult<T>
     const requestParameters = {} as RequestInit
     requestParameters.method = 'POST'
@@ -64,12 +45,7 @@ export class PiRestService {
     const request = new Request(requestUrl, requestParameters)
     const res = await fetch(await this.transformRequest(request))
     if (!res.ok) throw new Error('Fetch Error', { cause: res })
-    return await this.processResponse(
-      dataRequestResult,
-      res,
-      requestUrl,
-      parser,
-    )
+    return await this.processResponse(dataRequestResult, res, requestUrl, parser)
   }
 
   public async getData<T>(url: string): Promise<DataRequestResult<T>> {
@@ -85,13 +61,10 @@ export class PiRestService {
   ): Promise<DataRequestResult<T>> {
     const requestOption = new RequestOptions()
     requestOption.relativeUrl = !url.startsWith('http')
-    return this.postDataWithParser(
-      url,
-      requestOption,
-      new DefaultParser(),
-      body,
-      { 'Content-Type': 'application/json', ...headers },
-    )
+    return this.postDataWithParser(url, requestOption, new DefaultParser(), body, {
+      'Content-Type': 'application/json',
+      ...headers,
+    })
   }
 
   private async processResponse<T>(

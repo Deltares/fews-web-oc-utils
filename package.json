@@ -23,33 +23,28 @@
     }
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "vp build && tsc -p tsconfig.build.json",
     "doc": "typedoc src/index.ts",
-    "lint": "npm run prettier",
-    "prettier": "prettier . --check",
-    "format": "prettier .  --write",
-    "test:unit": "vitest run test/unit",
-    "test:e2e": "vitest run test/e2e",
-    "test": "vitest"
+    "check": "vp check",
+    "lint": "vp lint",
+    "format": "vp fmt .",
+    "test:unit": "vp test run test/unit",
+    "test:e2e": "vp test run test/e2e",
+    "test": "vp test"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/node": "^24.19.2",
-    "eslint": "^10.13.0",
-    "eslint-config-prettier": "^10.1.8",
     "fetch-mock": "^12.6.0",
-    "globals": "^17.13.0",
     "json-schema-to-typescript": "^16.0.0",
-    "prettier": "^3.9.10",
     "tslib": "^2.8.1",
     "typedoc": "^0.28.20",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
+    "vite-plus": "1.4.0",
+    "vitest": "5.0.5"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "files": [
     "dist/*"
@@ -65,7 +60,8 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "volta": {
-    "node": "24.14.1"
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
+    "vitest": "5.0.5"
   }
 }

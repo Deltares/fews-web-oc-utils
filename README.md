@@ -24,10 +24,22 @@ Build only cjs bundle
 npm run build:cjs
 ```
 
-### Lints and fixes files
+### Check formatting, lint and types
+
+```
+npm run check
+```
+
+### Lint
 
 ```
 npm run lint
+```
+
+### Format files
+
+```
+npm run format
 ```
 
 ### Run tests
